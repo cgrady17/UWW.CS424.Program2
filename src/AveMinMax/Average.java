@@ -1,6 +1,7 @@
 package AveMinMax;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * UWW CS424 | Spring 2016 | Program 2
@@ -12,16 +13,25 @@ import java.util.List;
  */
 public class Average implements Runnable {
     private List<Integer> numbers;
-    private Integer average;
+    private AtomicInteger average;
 
     /**
      * Initializes a new instance of Average with the specified collection of numbers.
      *
      * @param numbers The collection of numbers from which to calculate an average.
      */
-    public Average(List<Integer> numbers) {
+    public Average(List<Integer> numbers, AtomicInteger average) {
         this.numbers = numbers;
-        this.average = 0;
+        this.average = average;
+    }
+
+    /**
+     * Gets the current value of the calculated average.
+     *
+     * @return Value of the calculated average.
+     */
+    public AtomicInteger getAverage() {
+        return this.average;
     }
 
     /**
@@ -41,6 +51,6 @@ public class Average implements Runnable {
         }
 
         // Assign the average as the sum divided by the number of numbers
-        average = sum / numbers.size();
+        average.set(sum / numbers.size());
     }
 }

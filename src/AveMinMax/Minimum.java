@@ -1,6 +1,7 @@
 package AveMinMax;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * UWW CS424 | Spring 2016 | Program 2
@@ -12,11 +13,11 @@ import java.util.List;
  */
 public class Minimum implements Runnable {
     public List<Integer> numbers;
-    public int minimum;
+    public AtomicInteger minimum;
 
-    public Minimum(List<Integer> numbers) {
+    public Minimum(List<Integer> numbers, AtomicInteger minimum) {
         this.numbers = numbers;
-        this.minimum = Integer.MAX_VALUE;
+        this.minimum = minimum;
     }
 
     /**
@@ -28,11 +29,16 @@ public class Minimum implements Runnable {
         if (numbers == null || numbers.size() == 0)
             throw new IllegalArgumentException("Collection of numbers must be at least one number");
 
+        int currMinimum = minimum.get();
+        if (currMinimum != Integer.MAX_VALUE) minimum.set(Integer.MAX_VALUE);
+
         // Iterate through each number in the collection
         // If the number is greater than the existing maximum,
         // replace the maximum with the number
         for (Integer number : numbers) {
-            minimum = (number < minimum) ? number : minimum;
+            currMinimum = minimum.get();
+
+            if (number < currMinimum) minimum.set(number);
         }
     }
 }
